@@ -1,4 +1,4 @@
-<div class="jumbotron text-center">
+<div class="jumbotron text-center" aria-live="polite">
     <p>Current count:</p>
-    <p><strong>Please include the counter here</strong></p>
+    <p><strong>{{ currentCount$ | async }}</strong></p>
 </div>
