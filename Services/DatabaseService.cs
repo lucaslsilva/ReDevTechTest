@@ -1,9 +1,12 @@
 ﻿using ajgre_technical_interview.Models;
+using ajgre_technical_interview.Validators;
 
 namespace ajgre_technical_interview.Services
 {
     public class DatabaseService : IDatabaseService
     {
+        private readonly ISanctionedEntityValidator _validator;
+
         private static readonly IList<SanctionedEntity> SanctionedEntities = new List<SanctionedEntity>
         {
             new SanctionedEntity { Name = "Forbidden Company", Domicile = "Mars", Accepted = false },
@@ -11,6 +14,11 @@ namespace ajgre_technical_interview.Services
             new SanctionedEntity { Name = "Good Ltd", Domicile = "Saturn", Accepted = true },
             new SanctionedEntity { Name = "Evil Plc", Domicile = "Venus", Accepted = false }
         };
+
+        public DatabaseService(ISanctionedEntityValidator validator)
+        {
+            _validator = validator;
+        }
 
         public async Task<IList<SanctionedEntity>> GetSanctionedEntitiesAsync()
         {
@@ -29,6 +37,7 @@ namespace ajgre_technical_interview.Services
 
         public async Task<SanctionedEntity> CreateSanctionedEntityAsync(SanctionedEntity sanctionedEntity)
         {
+            await _validator.ValidateAsync(sanctionedEntity, SanctionedEntities);
             SanctionedEntities.Add(sanctionedEntity);
             return await Task.FromResult(sanctionedEntity);
         }

@@ -1,4 +1,5 @@
-﻿using ajgre_technical_interview.Services;
+﻿using ajgre_technical_interview.Models;
+using ajgre_technical_interview.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ajgre_technical_interview.Controllers
@@ -28,6 +29,20 @@ namespace ajgre_technical_interview.Controllers
                 return Problem(ex.Message);
             }
 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateSanctionedEntity([FromBody] SanctionedEntity entity)
+        {
+            try
+            {
+                var created = await _databaseService.CreateSanctionedEntityAsync(entity);
+                return CreatedAtAction(nameof(GetSanctionedEntities), new { id = created.Id }, created);
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
         }
     }
 }

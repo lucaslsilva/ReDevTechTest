@@ -1,0 +1,90 @@
+<form class="mb-4" [formGroup]="entityForm" (ngSubmit)="addEntity()">
+  <div class="mb-3">
+    <label class="form-label" for="name"> Name </label>
+    <input
+      class="form-control"
+      formControlName="name"
+      id="name"
+      type="text"
+      [class.is-invalid]="
+        (entityForm.controls.name.touched || formSubmitted) &&
+        entityForm.controls.name.invalid
+      "
+    />
+    <div
+      class="invalid-feedback"
+      *ngIf="
+        (entityForm.controls.name.touched || formSubmitted) &&
+        entityForm.controls.name.hasError('required')
+      "
+    >
+      Name is required.
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label" for="domicile">Domicile</label>
+    <input
+      class="form-control"
+      id="domicile"
+      formControlName="domicile"
+      type="text"
+      [class.is-invalid]="
+        (entityForm.controls.domicile.touched || formSubmitted) &&
+        entityForm.controls.domicile.invalid
+      "
+    />
+    <div
+      class="invalid-feedback"
+      *ngIf="
+        (entityForm.controls.domicile.touched || formSubmitted) &&
+        entityForm.controls.domicile.hasError('required')
+      "
+    >
+      Domicile is required.
+    </div>
+  </div>
+
+  <div
+    class="text-danger mb-2"
+    *ngIf="
+      (entityForm.errors?.['duplicateEntity'] &&
+        (formSubmitted || entityForm.touched))
+    "
+  >
+    An entity with the same name and domicile already exists.
+  </div>
+
+  <div class="form-check form-switch mb-3">
+    <input
+      class="form-check-input"
+      formControlName="accepted"
+      id="accepted"
+      type="checkbox"
+    />
+    <label class="form-check-label" for="accepted">Accepted</label>
+  </div>
+
+  <div *ngIf="formError" class="text-danger mb-2">{{ formError }}</div>
+
+  <div class="mt-3">
+    <button
+      class="btn btn-primary"
+      type="submit"
+      [disabled]="entityForm.invalid || isSaving"
+    >
+      <span
+        *ngIf="isSaving"
+        class="spinner-border spinner-border-sm me-2"
+      ></span>
+      Save
+    </button>
+    <button
+      class="btn btn-secondary ms-2"
+      type="button"
+      routerLink="/sanctioned-entities"
+    >
+      Cancel
+    </button>
+  </div>
+</form>

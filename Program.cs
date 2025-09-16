@@ -1,4 +1,5 @@
 using ajgre_technical_interview.Services;
+using ajgre_technical_interview.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,23 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddSingleton<IDatabaseService, DatabaseService>();
+builder.Services.AddSingleton<ISanctionedEntityValidator, SanctionedEntityValidator>();
+
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    if (builder.Environment.IsDevelopment())
+    {
+        // Dev: allow localhost
+        options.AddPolicy("CorsPolicy", policy =>
+        {
+            policy
+                .SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+    }
+});
 
 var app = builder.Build();
 
@@ -20,6 +38,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+// Use the CORS policy
+app.UseCors("CorsPolicy");
 
 app.MapControllerRoute(
     name: "default",

@@ -4,10 +4,9 @@ import { SanctionedEntity } from '../models/sanctioned-entity';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SanctionedEntitiesService {
-
   private readonly apiUrl: string;
   private readonly path = 'sanctioned-entities';
 
@@ -18,5 +17,10 @@ export class SanctionedEntitiesService {
   public getSanctionedEntities(): Observable<SanctionedEntity[]> {
     const url = this.apiUrl + this.path;
     return this.http.get<SanctionedEntity[]>(url);
+  }
+
+  public addSanctionedEntity(entity: SanctionedEntity): Observable<void> {
+    const url = this.apiUrl + this.path;
+    return this.http.post<void>(url, entity);
   }
 }
